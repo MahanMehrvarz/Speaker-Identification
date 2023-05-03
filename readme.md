@@ -1,0 +1,1 @@
+speaker recognition method with NVIDIA nemo tools
