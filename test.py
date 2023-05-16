@@ -1,11 +1,15 @@
 import record
-audio_path = "./demo.wav"
-print("start speaking")
-record.record_to_file(audio_path)
-print("done recording")
-
-print("starting recognition:")
 import sprec
+
 rec = sprec.Recognizer()
-print(rec.find_speaker(audio_path))
-print("done")
+
+while True:
+    audio_path = "./demo.wav"
+    print("Start speaking...")
+    record.record_to_file(audio_path)
+    print("Done recording")
+
+    print("Starting recognition:")
+    speaker = rec.find_speaker(audio_path)
+    print(f"Speaker: {speaker}")
+    print("Recognition done\n")
