@@ -1,0 +1,14 @@
+[
+  {
+    "id": "Mahan",
+    "weight": 7,
+    "last_recognized": "2023-05-05 13:49:16",
+    "image": "./Data/Mahan/Mahan.jpg"
+  },
+  {
+    "id": "Dave",
+    "weight": 4,
+    "last_recognized": "2023-05-05 13:48:31",
+    "image": "./Data/Dave/Dave.jpg"
+  }
+]

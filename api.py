@@ -3,6 +3,7 @@ import threading
 import queue
 import sprec
 import record
+import json
 
 import sqlite3
 from datetime import datetime
@@ -13,7 +14,7 @@ def create_db():
     c = conn.cursor()
 
     c.execute('''CREATE TABLE IF NOT EXISTS speakers
-                 (id TEXT PRIMARY KEY, weight INTEGER, last_recognized TEXT)''')
+                 (id TEXT PRIMARY KEY, weight INTEGER, last_recognized TEXT, image TEXT)''')
     conn.commit()
     conn.close()
 
@@ -28,19 +29,43 @@ def update_speaker_record(speaker_id):
     speaker = c.fetchone()
 
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    image_path = f"./Data/{speaker_id}/{speaker_id}.jpg"
 
     if speaker:
         # Update the existing speaker's weight and last_recognized timestamp
-        c.execute("UPDATE speakers SET weight=?, last_recognized=? WHERE id=?",
-                  (speaker[1] + 1, current_time, speaker_id))
+        c.execute("UPDATE speakers SET weight=?, last_recognized=?, image=? WHERE id=?",
+                  (speaker[1] + 1, current_time, image_path, speaker_id))
     else:
         # Insert a new speaker record
-        c.execute("INSERT INTO speakers (id, weight, last_recognized) VALUES (?, ?, ?)",
-                  (speaker_id, 1, current_time))
+        c.execute("INSERT INTO speakers (id, weight, last_recognized, image) VALUES (?, ?, ?, ?)",
+                  (speaker_id, 1, current_time, image_path))
 
     conn.commit()
     conn.close()
+    # Update the JSON mirror of the database
+    json_data = db_to_json()
+    save_json_data(json_data)
 
+    
+#converting the db to json
+def db_to_json():
+    conn = sqlite3.connect('speakers.db')
+    conn.row_factory = sqlite3.Row  # Enable fetching rows as dictionaries
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM speakers")
+    rows = c.fetchall()
+
+    # Convert rows to dictionaries and then to a JSON string
+    json_data = json.dumps([dict(row) for row in rows], indent=2)
+
+    conn.close()
+    return json_data
+
+#putin the json in a file
+def save_json_data(json_data, filename="speakers.json"):
+    with open(filename, "w") as json_file:
+        json_file.write(json_data)
 
 
 app = Flask(__name__)
@@ -65,7 +90,6 @@ def recognize_speaker(q, recognizer):
             else:
                 print("Speaker not recognized")
             print("Recognition done\n")
-
 
 if __name__ == '__main__':
     recognition_thread = threading.Thread(target=recognize_speaker, args=(audio_queue, rec))
