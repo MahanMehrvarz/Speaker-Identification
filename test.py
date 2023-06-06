@@ -1,7 +1,11 @@
 import record
-import sprec
-
+#import sprec
+import sprecFast as sprec
 rec = sprec.Recognizer()
+
+
+# Compute and save embeddings - only do this when new audio files are added
+rec.compute_and_save_embeddings()
 
 while True:
     audio_path = "./demo.wav"
