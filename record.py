@@ -102,7 +102,7 @@ def record():
         elif not silent and not snd_started:
             snd_started = True
 
-        if snd_started and num_silent > 70:
+        if snd_started and num_silent > 50:
             break
 
     sample_width = p.get_sample_size(FORMAT)

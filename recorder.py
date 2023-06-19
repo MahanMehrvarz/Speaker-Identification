@@ -10,6 +10,7 @@ if __name__ == "__main__":
         audio_path = "./demo.wav"
         print("Start speaking...")
         record.record_to_file(audio_path)
+        
         print("Done recording")
         
         send_audio_for_recognition(audio_path)
