@@ -7,7 +7,7 @@ function preload() {
 }
 
 function loadImages() {
-  loadJSON('data.json', function(loadedData) {
+  loadJSON('speakers.json', function(loadedData) {
     data = loadedData;
     images = []; // Clear the old images
     for (let i = 0; i < data.length; i++) {
@@ -17,7 +17,7 @@ function loadImages() {
 }
 
 function setup() {
-  createCanvas(800, 400);
+  createCanvas(1920, 400);
 }
 
 function draw() {
@@ -25,7 +25,7 @@ function draw() {
   let x = 0;
   for (let i = 0; i < images.length; i++) {
     if (images[i]) {
-      tint(255,(data[i].weight)*8)
+      tint(255,(data[i].weight)*10)
       image(images[i], x, 0);
       x += images[i].width;
     }
